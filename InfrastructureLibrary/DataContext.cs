@@ -19,6 +19,7 @@ namespace InfrastructureLibrary
         public DbSet<Location> Location { get; set; }
         public DbSet<Activation> Activation { get; set; }
         public DbSet<CodeGroup> CodeGroup { get; set; }
+        public DbSet<Device> Device { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -29,6 +30,7 @@ namespace InfrastructureLibrary
             builder.Entity<Location>().ToTable("Location");
             builder.Entity<Activation>().ToTable("Activation");
             builder.Entity<CodeGroup>().ToTable("CodeGroup");
+            builder.Entity<Device>().ToTable("Device").HasKey("MACAddress");
 
             base.OnModelCreating(builder);
         }

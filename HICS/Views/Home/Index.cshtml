@@ -1,8 +1,93 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Code>
+
+@{
+    ViewData["Title"] = "HICS";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+
+
+    <form asp-controller="Home" asp-action="Activation" method="post">
+        @foreach (var item in Model)
+        {
+
+            <button class="btn btn-success btn-lg">@Html.DisplayFor(x => item.CodeName)</button>
+            <span></span>
+        }
+    </form>
 </div>
+
+@*<div align="center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    </div>
+
+    <div align="center" style="padding:20px">
+        <button role="button" class="btn btn-success btn-lg button" data-toggle="modal" data-target="#exampleModalCenter">Hello Click me</button>
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+        @using (Html.BeginForm("indexx", "Home", FormMethod.Post))
+        {
+            <input type="submit" value="Activate" />
+        }
+
+    </div>
+    <div align="center" style="padding:20px">
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+
+
+    </div>
+    <div align="center" style="padding:20px">
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+
+    </div>
+    <div align="center" style="padding:20px">
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+        <button role="button" class="btn btn-success btn-lg button">Hello Click me</button>
+
+    </div>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Enter Your Badge Number" aria-label="Recipient's username" aria-describedby="button-addon2">*@
+@*<div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
+    </div>*@
+@*</div>
+
+                    Code Blue in Ward 1 will be Activated
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <form asp-controller="Home" asp-action="indexx" method="post">
+                        <button type="button" class="btn btn-primary" name="btnActivate">Submit</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .button {
+            padding: 14px 40px;
+            border-radius: 6px;
+        }
+    </style>*@
