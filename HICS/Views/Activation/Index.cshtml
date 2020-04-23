@@ -1,0 +1,45 @@
+﻿@model ActivationVM
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container">
+
+    @foreach (var item in Model.Codes)
+    {
+        <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#ModalCenter" onclick="PassToModal">
+
+            @Html.DisplayFor(x => item.CodeName)
+
+        </button>
+    }
+
+</div>
+
+<div class="modal fade" id="ModalCenter" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form asp-action="Activate" asp-controller="Activation" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLongTitle">Are you sure?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Enter your badge number" name="BadgeNo" aria-label="BadgeNo" aria-describedby="button-addon2" />
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">Validate</button>
+                        </div>
+                    </div>
+                    @Html.DisplayNameFor(x => x.CodeName) in @Html.DisplayNameFor(x => x.LocationName) will be activated !
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <input type="submit" class="btn btn-primary form-control" name="btnActivate" value="Submit" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

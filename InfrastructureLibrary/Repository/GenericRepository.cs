@@ -16,7 +16,7 @@ namespace InfrastructureLibrary.Repository
             _context = context;
             table = _context.Set<T>();
         }
-        public void Delete(object id)
+        public void Delete(int id)
         {
             T existing = GetById(id);
             table.Remove(existing);
@@ -27,7 +27,7 @@ namespace InfrastructureLibrary.Repository
             return table.ToList();
         }
 
-        public T GetById(object id)
+        public T GetById(int id)
         {
             return table.Find(id);
         }

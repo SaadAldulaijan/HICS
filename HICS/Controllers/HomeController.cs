@@ -27,17 +27,20 @@ namespace HICS.Controllers
         private readonly IUnitOfWork<Activation> _activation;
         private readonly IUnitOfWork<Employee> _employee;
         private readonly IUnitOfWork<Code> _code;
+        private readonly IUnitOfWork<Location> _location;
 
         public HomeController(
             ILogger<HomeController> logger, 
             IUnitOfWork<Activation> activation, 
             IUnitOfWork<Employee> employee,
-            IUnitOfWork<Code> code)
+            IUnitOfWork<Code> code,
+            IUnitOfWork<Location> location)
         {
             _logger = logger;
             _activation = activation;
             _employee = employee;
             _code = code;
+            _location = location;
         }
 
         public IActionResult Index()
@@ -45,13 +48,29 @@ namespace HICS.Controllers
             return View(_code.Entity.GetAll());
         }
 
-        public IActionResult Activation()
+        [HttpPost]
+        public IActionResult Activation(int badge)
         {
+            if (ModelState.IsValid)
+            {
+                Activation activation = new Activation()
+                {
+                    CodeId = 1,
+                    LocationId = 1,
+                    ActivationTime = DateTime.Now,
+                    Status = false
+                };
+            }
+
             //Keep it clean, dry
             //Fisrt Priority to play the sound 
-            PlaySound("BUT HERE IS THE PROBLEM", "WE CAN GET THIS FROM COOKIE");
+            //PlaySound("BUT HERE IS THE PROBLEM", "WE CAN GET THIS FROM COOKIE");
 
-            return View();
+            // How to get the location ID, and Code ID
+            
+            //_activation.Entity.Insert(activation);
+            //_activation.Save();
+            return View("Privacy");
         }
 
         public IActionResult Privacy()
