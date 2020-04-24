@@ -13,6 +13,5 @@ namespace HICS.ViewModels
         public string LocationName { get; set; }
         public List<Code> Codes { get; set; } = new List<Code>();
         public int BadgeNo { get; set; }
-
     }
 }

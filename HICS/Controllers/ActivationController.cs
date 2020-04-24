@@ -14,14 +14,17 @@ namespace HICS.Controllers
         private readonly IUnitOfWork<Activation> _activation;
         private readonly IUnitOfWork<Code> _code;
         private readonly IUnitOfWork<Location> _location;
+        private readonly IUnitOfWork<Employee> _employee;
 
         public ActivationController(IUnitOfWork<Activation> activation , 
             IUnitOfWork<Code> code, 
-            IUnitOfWork<Location> location)
+            IUnitOfWork<Location> location,
+            IUnitOfWork<Employee> employee)
         {
             _activation = activation;
             _code = code;
             _location = location;
+            _employee = employee;
         }
         public IActionResult Index()
         {
@@ -32,10 +35,26 @@ namespace HICS.Controllers
             return View(activationVM);
         }
         
-        public IActionResult Activate()
+        public IActionResult Activate(int badgeNo, string codeName, string locationName)
         {
+            if (IsValidBadgeNo(badgeNo))
+            {
 
+            }
             return RedirectToAction(nameof(Index));
+        }
+
+        public bool IsValidBadgeNo(int BadgeNo)
+        {
+            var result = _employee.Entity.GetById(BadgeNo).ID;
+            if (result != 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
