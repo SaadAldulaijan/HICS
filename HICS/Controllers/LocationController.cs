@@ -56,9 +56,9 @@ namespace HICS.Controllers
                     IPAddress = ipAddress
                 };
                 _device.Entity.Insert(device);
-                _device.Save();
+                //_device.Save();
                 //Redirect to activation page
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Activation");
             }
 
             ViewData["LocationId"] = new SelectList(

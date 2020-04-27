@@ -7,20 +7,22 @@
 
     @foreach (var item in Model.Codes)
     {
-        <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#item-@item.CodeId" onclick="PassToModal">
+        <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#item-@item.CodeId">
 
             @Html.DisplayFor(x => item.CodeName)
-
         </button>
     }
 
 </div>
+
 @foreach (var item in Model.Codes)
 {
+
     <div class="modal fade" id="item-@item.CodeId" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <form asp-action="Activate" asp-controller="Activation" method="post">
+                    <input name="Code.CodeId" type="hidden" value="@item.CodeId" />
                     <div class="modal-header">
                         <h5 class="modal-title" id="ModalLongTitle">Are you sure?</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -29,19 +31,54 @@
                     </div>
                     <div class="modal-body">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(x=>x.BadgeNo)" name="@Model.BadgeNo" aria-label="BadgeNo" aria-describedby="button-addon2" />
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon2">Validate</button>
-                            </div>
+                            <input asp-for="Employee.ID" class="form-control" />
+                            <input type="hidden" asp-for="@item.CodeId" />
                         </div>
-                        @item.CodeName in @item.CodeColor will be activated.
+                        
+                        @item.CodeName with id @item.CodeId will be activated.
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <input type="submit" class="btn btn-primary form-control" name="btnActivate" value="Submit" />
+                        <input type="submit" class="btn btn-primary form-control" value="Submit" />
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
 }
+
+@*
+
+    @foreach (var item in Model.Codes)
+    {
+        <div class="modal fade" id="item-@item.CodeId" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form asp-action="Activate" asp-controller="Activation" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLongTitle">Are you sure?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group mb-3">
+                                <input asp-for="BadgeNo" class="form-control" />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">Validate</button>
+                                </div>
+                            </div>
+                            @item.CodeName in @item.CodeColor  and code @Model.CodeId will be activated.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <input type="submit" class="btn btn-primary form-control" value="Submit" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+*@
+

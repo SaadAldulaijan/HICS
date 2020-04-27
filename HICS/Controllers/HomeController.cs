@@ -14,9 +14,9 @@ namespace HICS.Controllers
     public class HomeController : Controller
     {
         /*TODO:
-         * The goal is to insert into table activation a record. 
-         * We should know who inserted this record. 
-         * We should know when the record is inserted. 
+         * The goal is to insert into table activation a record. : DONE.
+         * We should know who inserted this record. : DONE.
+         * We should know when the record is inserted : DONE.
          * We should play a sound : DONE.
          * We should send pager.
          * We should send notification.

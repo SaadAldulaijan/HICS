@@ -1,0 +1,83 @@
+﻿@*@model HICSManager.ViewModel.ActivationVM
+    @{
+        ViewData["Title"] = "Index";
+    }
+
+    <h1>Index</h1>
+    <div class="container">
+
+        @foreach (var item in Model.Codes)
+        {
+            <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#item-@item.CodeId">
+                @Html.DisplayFor(x => item.CodeName)
+            </button>
+        }
+    </div>
+    <form asp-action="Activate" asp-controller="Activation" method="post">
+        @foreach (var item in Model.Codes)
+        {
+            <div class="modal fade" id="item-@item.CodeId" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLongTitle">Are you sure?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            @item.CodeName will be activated !
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <input type="submit" class="btn btn-primary form-control" value="Submit" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </form>*@
+
+@model IEnumerable<CoreLibrary.Entities.Code>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<div class="container">
+    @foreach (var item in Model)
+    {
+        <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#item-@item.CodeId">
+            @item.CodeName
+        </button>
+    }
+    <form asp-action="Activate" asp-controller="Activation" method="post">
+
+        @foreach (var item in Model)
+        {
+
+            <div class="modal fade" id="item-@item.CodeId" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+                <input name="CodeId" type="hidden" value="@item.CodeId">
+
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLongTitle">Are you sure?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            @item.CodeName will be activated !
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <input type="submit" class="btn btn-primary form-control" value="Submit" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </form>
+</div>
