@@ -73,25 +73,15 @@ namespace InfrastructureLibrary.Migrations
 
             modelBuilder.Entity("CoreLibrary.Entities.CodeGroup", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
 
                     b.Property<int>("CodeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("GroupId", "CodeId");
 
                     b.HasIndex("CodeId");
-
-                    b.HasIndex("GroupId");
 
                     b.ToTable("CodeGroup");
                 });

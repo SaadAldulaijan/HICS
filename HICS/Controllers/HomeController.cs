@@ -13,16 +13,6 @@ namespace HICS.Controllers
 {
     public class HomeController : Controller
     {
-        /*TODO:
-         * The goal is to insert into table activation a record. : DONE.
-         * We should know who inserted this record. : DONE.
-         * We should know when the record is inserted : DONE.
-         * We should play a sound : DONE.
-         * We should send pager.
-         * We should send notification.
-         */
-
-
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitOfWork<Activation> _activation;
         private readonly IUnitOfWork<Employee> _employee;
