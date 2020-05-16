@@ -23,7 +23,11 @@ namespace PushNotificationAPI.Controllers
         {
             _notificationHubProxy = new NotificationHubProxy(standardNotificationHubConfiguration.Value);
         }
-
+        [HttpGet("Index")]
+        public string Index()
+        {
+            return "Test is working";
+        }
         /// 
         /// <summary>
         /// Get registration ID
