@@ -14,12 +14,7 @@
                     <RowDefinition Height="350*"/>
                     <RowDefinition Height="501*"/>
                 </Grid.RowDefinitions>
-                <Button Text="GET REGISTRATION ID" HorizontalOptions="Center" VerticalOptions="Top" Margin="0, 30, 0, 0" Command="{Binding GetRegistrationIdCommand}" Grid.Row="1"/>
-                <Button Text="REGISTER FOR PUSH NOTIFICATIONS" HorizontalOptions="Center" VerticalOptions="Top" Margin="0, 70, 0, 0" Command="{Binding RegisterForPushNotifications}" Grid.Row="1"/>
-                <Button Text="UNREGISTER FROM PUSH NOTIFICATION" HorizontalOptions="Center" VerticalOptions="Top" Margin="0, 110, 0, 0" Command="{Binding UnregisterFromPushNotifications}" Grid.Row="1"/>
-                <Button Text="SEND PUSH NOTIFICATION" HorizontalOptions="Center" VerticalOptions="Top" Margin="0, 150, 0, 0" Command="{Binding SendPushNotification}" Grid.Row="1"/>
-                <Label Text="STATUS:" Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center" FontSize="22"/>
-                <Label Text="{Binding Status}" Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center" FontSize="18" Margin="0,50,0,0"/>
+                
             </Grid>
         </StackLayout>
     </ContentView.Content>
