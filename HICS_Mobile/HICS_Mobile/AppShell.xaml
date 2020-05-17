@@ -29,15 +29,28 @@
         </ResourceDictionary>
     </Shell.Resources>
 
+
+    <Shell.FlyoutHeaderTemplate>
+        <DataTemplate>
+            <Grid HeightRequest="170" BackgroundColor="White" >
+                <Image Source="xamarin_logo.png" Aspect="AspectFit" />
+            </Grid>
+        </DataTemplate>
+    </Shell.FlyoutHeaderTemplate>
+    <FlyoutItem Title="Call API">
+        <ShellContent ContentTemplate="{DataTemplate local:FirstPage}"/>
+    </FlyoutItem>
+
+
     <!-- Your Pages -->
-    <TabBar>
+    <!--<TabBar>
         <Tab Title="Browse" Icon="tab_feed.png">
             <ShellContent ContentTemplate="{DataTemplate local:ItemsPage}" />
         </Tab>
         <Tab Title="About" Icon="tab_about.png">
             <ShellContent ContentTemplate="{DataTemplate local:AboutPage}" />
         </Tab>
-    </TabBar>
+    </TabBar>-->
 
     <!-- Optional Templates 
     // These may be provided inline as below or as separate classes.

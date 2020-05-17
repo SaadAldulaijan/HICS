@@ -17,6 +17,7 @@ namespace HICS_Mobile.Services
             _httpClient = new HttpClient();
         }
 
+        //api/notifications/register
         public async Task<string> GetPushRegistrationId()
         {
             string registrationId = string.Empty;
@@ -30,23 +31,7 @@ namespace HICS_Mobile.Services
             return registrationId;
         }
 
-        //public async Task<List<User>> GetGroupMembers1(int groupId)
-        //{
-        //    using (HttpResponseMessage response = await _apiClient.GetAsync($"/api/User/GetGroupMembers?groupId={groupId}"))
-        //    {
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            var result = await response.Content.ReadAsAsync<List<User>>();
-        //            return result;
-        //        }
-        //        else
-        //        {
-        //            throw new Exception(response.ReasonPhrase);
-        //        }
-        //    }
-        //}
-
-
+        //api/notifications/unregister/{registrationId}
         public async Task<bool> UnregisterFromNotifications(string registrationId)
         {
             HttpResponseMessage response = await _httpClient.DeleteAsync(string.Concat(_serviceAddress, $"/unregister/{registrationId}"));
@@ -55,6 +40,7 @@ namespace HICS_Mobile.Services
             return false;
         }
 
+        //api/notifications/enable/{id}
         public async Task<bool> EnablePushNotifications(string id, DeviceRegistration deviceUpdate)
         {
             string registrationId = string.Empty;
@@ -66,6 +52,7 @@ namespace HICS_Mobile.Services
             return false;
         }
 
+        //api/notifications/send
         public async Task<bool> SendNotification(Notification newNotification)
         {
             var content = new StringContent(JsonConvert.SerializeObject(newNotification), Encoding.UTF8, "application/json");

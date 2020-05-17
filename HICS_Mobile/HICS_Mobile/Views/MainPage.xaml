@@ -8,14 +8,7 @@
              x:Class="HICS_Mobile.Views.MainPage">
     <ContentView.Content>
         <StackLayout>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="237*"/>
-                    <RowDefinition Height="350*"/>
-                    <RowDefinition Height="501*"/>
-                </Grid.RowDefinitions>
-                
-            </Grid>
+           
         </StackLayout>
     </ContentView.Content>
 </ContentView>

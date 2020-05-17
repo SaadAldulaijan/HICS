@@ -14,7 +14,7 @@ namespace HICS_Mobile
             InitializeComponent();
 
             DependencyService.Register<MockDataStore>();
-            MainPage = new AppShell();
+            MainPage = new FirstPage();
         }
 
         protected override void OnStart()
