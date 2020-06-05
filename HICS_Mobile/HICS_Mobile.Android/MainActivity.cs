@@ -15,7 +15,7 @@ namespace HICS_Mobile.Droid
     {
         #region Fields
         public const string TAG = "MainActivity";
-        internal static readonly string CHANNEL_ID = "my_notification_channel";
+        internal static readonly string CHANNEL_ID = "myChannel";
         #endregion
 
         #region GoogleService
@@ -44,6 +44,15 @@ namespace HICS_Mobile.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
+            //
+            
+
+            
+            //CreateNotificationChannel();
+            global::Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
             if (Intent.Extras != null)
             {
                 foreach (var key in Intent.Extras.KeySet())
@@ -55,12 +64,7 @@ namespace HICS_Mobile.Droid
                     }
                 }
             }
-
             IsPlayServicesAvailable();
-            CreateNotificationChannel();
-            global::Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");
-            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
@@ -70,25 +74,25 @@ namespace HICS_Mobile.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        private void CreateNotificationChannel()
-        {
-            if (Build.VERSION.SdkInt < BuildVersionCodes.O)
-            {
-                // Notification channels are new in API 26 (and not a part of the
-                // support library). There is no need to create a notification
-                // channel on older versions of Android.
-                return;
-            }
+        //private void CreateNotificationChannel()
+        //{
+        //    if (Build.VERSION.SdkInt < BuildVersionCodes.O)
+        //    {
+        //        // Notification channels are new in API 26 (and not a part of the
+        //        // support library). There is no need to create a notification
+        //        // channel on older versions of Android.
+        //        return;
+        //    }
 
-            var channelName = CHANNEL_ID;
-            var channelDescription = string.Empty;
-            var channel = new NotificationChannel(CHANNEL_ID, channelName, NotificationImportance.Default)
-            {
-                Description = channelDescription
-            };
+        //    var channelName = CHANNEL_ID;
+        //    var channelDescription = string.Empty;
+        //    var channel = new NotificationChannel(CHANNEL_ID, channelName, NotificationImportance.High)
+        //    {
+        //        Description = channelDescription
+        //    };
 
-            var notificationManager = (NotificationManager)GetSystemService(NotificationService);
-            notificationManager.CreateNotificationChannel(channel);
-        }
+        //    var notificationManager = (NotificationManager)GetSystemService(NotificationService);
+        //    notificationManager.CreateNotificationChannel(channel);
+        //}
     }
 }

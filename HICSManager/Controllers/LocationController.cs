@@ -13,12 +13,15 @@ namespace HICSManager.Controllers
 {
     public class LocationController : Controller
     {
+        #region Properties and Constructor
         private readonly IUnitOfWork<Location> _location;
         public LocationController(IUnitOfWork<Location> location)
         {
             _location = location;
         }
+        #endregion
 
+        #region Select
         // GET: Location
         public IActionResult Index()
         {
@@ -41,7 +44,9 @@ namespace HICSManager.Controllers
 
             return View(location);
         }
+        #endregion
 
+        #region Insert
         // GET: Location/Create
         public IActionResult Create()
         {
@@ -60,7 +65,9 @@ namespace HICSManager.Controllers
             }
             return View(location);
         }
+        #endregion
 
+        #region Update
         // GET: Location/Edit/5
         public IActionResult Edit(int id)
         {
@@ -109,7 +116,9 @@ namespace HICSManager.Controllers
             }
             return View(location);
         }
+        #endregion
 
+        #region Delete
         // GET: Location/Delete/5
         public IActionResult Delete(int id)
         {
@@ -143,5 +152,6 @@ namespace HICSManager.Controllers
         {
             return _location.Entity.GetAll().Any(e => e.LocationId == id);
         }
+        #endregion
     }
 }

@@ -13,13 +13,16 @@ namespace HICSManager.Controllers
 {
     public class GroupController : Controller
     {
+        #region Properties and Constructor
         private readonly IUnitOfWork<Group> _group;
 
         public GroupController(IUnitOfWork<Group> group)
         {
             _group = group;
         }
+        #endregion
 
+        #region Select
         // GET: Groups
         public IActionResult Index()
         {
@@ -48,6 +51,9 @@ namespace HICSManager.Controllers
             return View(group);
         }
 
+        #endregion
+
+        #region Insert
         // GET: Groups/Create
         public IActionResult Create()
         {
@@ -56,7 +62,7 @@ namespace HICSManager.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GroupId,Name,Type,Description")] Group group)
+        public IActionResult Create([Bind("GroupId,Name,Type,Description")] Group group)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +72,9 @@ namespace HICSManager.Controllers
             }
             return View(group);
         }
+        #endregion
 
+        #region Update
         // GET: Groups/Edit/5
         public IActionResult Edit(int id)
         {
@@ -115,6 +123,9 @@ namespace HICSManager.Controllers
             }
             return View(group);
         }
+        #endregion
+
+        #region Delete
 
         // GET: Groups/Delete/5
         public IActionResult Delete(int id)
@@ -147,5 +158,6 @@ namespace HICSManager.Controllers
         {
             return _group.Entity.GetAll().Any(e => e.GroupId == id);
         }
+        #endregion
     }
 }

@@ -11,20 +11,18 @@ using CoreLibrary.Interfaces;
 
 namespace HICSManager.Controllers
 {
-    /// <summary>
-    /// TODO: 
-    /// 1. list of codes: name, color, pagerNo
-    /// 2. On Edit 
-    /// </summary>
     public class CodeController : Controller
     {
+        #region Properties and Constructor
         private readonly IUnitOfWork<Code> _code;
 
         public CodeController(IUnitOfWork<Code> code)
         {
             _code = code;
         }
+        #endregion
 
+        #region Select
         // GET: Code
         public IActionResult Index()
         {
@@ -34,14 +32,6 @@ namespace HICSManager.Controllers
         // GET: Code/Details/5
         public IActionResult Details(int id)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var codes = await _context.Code
-            //    .FirstOrDefaultAsync(m => m.CodeId == id);
-
             var code = _code.Entity.GetById(id);
             if (code == null)
             {
@@ -50,7 +40,9 @@ namespace HICSManager.Controllers
 
             return View(code);
         }
+        #endregion
 
+        #region Insert
         // GET: Code/Create
         public IActionResult Create()
         {
@@ -58,8 +50,6 @@ namespace HICSManager.Controllers
         }
 
         // POST: Code/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("CodeId,CodeName,CodeColor,PagerNo")] Code code)
@@ -72,16 +62,12 @@ namespace HICSManager.Controllers
             }
             return View(code);
         }
+        #endregion
 
+        #region Update
         // GET: Code/Edit/5
         public IActionResult Edit(int id)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var code = await _context.Code.FindAsync(id);
             var code = _code.Entity.GetById(id);
             if (code == null)
             {
@@ -91,8 +77,6 @@ namespace HICSManager.Controllers
         }
 
         // POST: Code/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("CodeId,CodeName,CodeColor,PagerNo")] Code code)
@@ -106,8 +90,6 @@ namespace HICSManager.Controllers
             {
                 try
                 {
-                    //_context.Update(code);
-                    //await _context.SaveChangesAsync();
                     _code.Entity.Update(code);
                     _code.Save();
                 }
@@ -126,17 +108,12 @@ namespace HICSManager.Controllers
             }
             return View(code);
         }
+        #endregion
 
+        #region Delete
         // GET: Code/Delete/5
         public IActionResult Delete(int id)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var code = await _context.Code
-            //    .FirstOrDefaultAsync(m => m.CodeId == id);
             var code = _code.Entity.GetById(id);
             if (code == null)
             {
@@ -151,10 +128,6 @@ namespace HICSManager.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            //var code = await _context.Code.FindAsync(id);
-            //_context.Code.Remove(code);
-            //await _context.SaveChangesAsync();
-
             var code = _code.Entity.GetById(id);
             _code.Entity.Delete(code.CodeId);
             _code.Save();
@@ -163,8 +136,8 @@ namespace HICSManager.Controllers
 
         private bool CodeExists(int id)
         {
-            //return _context.Code.Any(e => e.CodeId == id);
             return _code.Entity.GetAll().Any(e => e.CodeId == id);
         }
+        #endregion
     }
 }

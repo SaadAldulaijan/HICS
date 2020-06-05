@@ -13,6 +13,7 @@ namespace HICSManager.Controllers
 {
     public class EmployeeController : Controller
     {
+        #region Properties and Constructor
         private readonly IUnitOfWork<Employee> _employee;
 
         public EmployeeController(IUnitOfWork<Employee> employee)
@@ -20,6 +21,9 @@ namespace HICSManager.Controllers
             _employee = employee;
         }
 
+        #endregion
+
+        #region Select
         // GET: Employee
         public IActionResult Index()
         {
@@ -29,11 +33,6 @@ namespace HICSManager.Controllers
         // GET: Employee/Details/5
         public IActionResult Details(int id)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
             var employee = _employee.Entity.GetById(id);
             if (employee == null)
             {
@@ -42,7 +41,9 @@ namespace HICSManager.Controllers
 
             return View(employee);
         }
+        #endregion
 
+        #region Insert
         // GET: Employee/Create
         public IActionResult Create()
         {
@@ -50,8 +51,6 @@ namespace HICSManager.Controllers
         }
 
         // POST: Employee/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("ID,FirstName,LastName,MoblieNo,Email")] Employee employee)
@@ -64,15 +63,12 @@ namespace HICSManager.Controllers
             }
             return View(employee);
         }
+        #endregion
 
+        #region Update
         // GET: Employee/Edit/5
         public IActionResult Edit(int id)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
             var employee = _employee.Entity.GetById(id);
             if (employee == null)
             {
@@ -82,8 +78,6 @@ namespace HICSManager.Controllers
         }
 
         // POST: Employee/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("ID,FirstName,LastName,MoblieNo,Email")] Employee employee)
@@ -115,17 +109,12 @@ namespace HICSManager.Controllers
             }
             return View(employee);
         }
+        #endregion
 
+        #region Delete
         // GET: Employee/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        public IActionResult Delete(int id)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var employees = await _context.Employee
-            //    .FirstOrDefaultAsync(m => m.ID == id);
             var employee = _employee.Entity.GetById(id);
             if (employee == null)
             {
@@ -140,19 +129,17 @@ namespace HICSManager.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            //var employee = await _context.Employee.FindAsync(id);
             var employee = _employee.Entity.GetById(id);
-            //_context.Employee.Remove(employee);
             _employee.Entity.Delete(employee.ID);
             _employee.Save();
-            //await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool EmployeeExists(int id)
         {
-            //return _context.Employee.Any(e => e.ID == id);
             return _employee.Entity.GetAll().Any(e => e.ID == id);
         }
+
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using HICS_Mobile.ViewModels;
+﻿using HICS_Mobile.Services;
+using HICS_Mobile.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,11 @@ namespace HICS_Mobile.Views
         {
             InitializeComponent();
             BindingContext = viewModel = new FirstPageViewModel();
+        }
+
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            DependencyService.Get<INotification>().SendNewNotification("Test", "Hi");
         }
     }
 }

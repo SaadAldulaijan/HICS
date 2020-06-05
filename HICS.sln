@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extension", "Extension\Exte
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HICSManager", "HICSManager\HICSManager.csproj", "{C747B232-2F6B-4E99-9474-538BB5723113}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PushNotificationAPI", "PushNotificationAPI\PushNotificationAPI.csproj", "{DFBA7D48-6001-420E-A474-561E6C441F4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PushNotificationAPI", "PushNotificationAPI\PushNotificationAPI.csproj", "{DFBA7D48-6001-420E-A474-561E6C441F4A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mobile", "Mobile", "{9FC2E8C1-E284-49F1-A9C5-B09D04C1E56F}"
 EndProject
@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HICS_Mobile.Android", "HICS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HICS_Mobile.iOS", "HICS_Mobile\HICS_Mobile.iOS\HICS_Mobile.iOS.csproj", "{BE0E4BC7-E961-46E7-AC35-A5E591A67D25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HICS_Mobile", "HICS_Mobile\HICS_Mobile\HICS_Mobile.csproj", "{5BAC9238-44CD-4CE1-9580-4E098617EF1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HICS_Mobile", "HICS_Mobile\HICS_Mobile\HICS_Mobile.csproj", "{5BAC9238-44CD-4CE1-9580-4E098617EF1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

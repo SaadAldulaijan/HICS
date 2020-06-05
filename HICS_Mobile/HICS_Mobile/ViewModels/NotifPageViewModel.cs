@@ -2,14 +2,13 @@
 using HICS_Mobile.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace HICS_Mobile.ViewModels
 {
-    public class FirstPageViewModel : BaseViewModel
+    public class NotifPageViewModel : BaseViewModel
     {
         #region Properties
         private string _status;
@@ -47,7 +46,7 @@ namespace HICS_Mobile.ViewModels
         #endregion
 
         #region Constructor
-        public FirstPageViewModel()
+        public NotifPageViewModel()
         {
             _restService = new RestService();
 
@@ -59,12 +58,14 @@ namespace HICS_Mobile.ViewModels
 
             RegisterForPushNotifications = new Command(async (parameter) =>
             {
-                var handle = " await InitNotificationsAsync()";
 
+                var handle = "my_notification_channel";
+                var tag = new List<string>() { "MainActivity" };
                 var deviceUpdate = new DeviceRegistration()
                 {
                     Handle = handle,
-                    Platform = MobilePlatform.gcm
+                    Platform = MobilePlatform.gcm,
+                    Tags = tag.ToArray()
                 };
 
                 var result = await _restService.EnablePushNotifications(RegistrationId, deviceUpdate);
@@ -85,13 +86,10 @@ namespace HICS_Mobile.ViewModels
 
             SendPushNotification = new Command(async (parameter) =>
             {
-
+                var msgBody = "Hi";
                 var notification = new Notification()
                 {
-                    Content = "{'data': {'message': 'Notification Hub test notification'}}"
-                    //Platform = MobilePlatform.gcm,
-                    //Handle = "await InitNotificationsAsync()",
-                    //Tags = null
+                    Content = "{\"data\":{\"message\": \"" + msgBody + "\"}}"
                 };
 
                 var result = await _restService.SendNotification(notification);
@@ -130,6 +128,5 @@ namespace HICS_Mobile.ViewModels
         //    ToastNotifier.Show(notification);
         //}
         #endregion
-
     }
 }

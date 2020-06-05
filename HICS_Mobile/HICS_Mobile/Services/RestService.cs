@@ -11,7 +11,7 @@ namespace HICS_Mobile.Services
     public class RestService
     {
         private HttpClient _httpClient;
-        private readonly string _serviceAddress = "https://localhost:44307/api/notifications";
+        private readonly string _serviceAddress = "https://hicsnotificationapi.azurewebsites.net/api/notifications";
         public RestService()
         {
             _httpClient = new HttpClient();
