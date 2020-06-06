@@ -33,6 +33,7 @@ namespace InfrastructureLibrary
             builder.Entity<Device>().ToTable("Device").HasKey("MACAddress");
 
             builder.Entity<CodeGroup>().HasKey(x => new { x.GroupId, x.CodeId });
+            builder.Entity<Membership>().HasKey(x => new { x.EmployeeId, x.GroupId });
 
             //base.OnModelCreating(builder);
         }

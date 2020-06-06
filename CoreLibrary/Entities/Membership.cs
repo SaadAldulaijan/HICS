@@ -4,7 +4,6 @@ namespace CoreLibrary.Entities
 {
     public class Membership
     {
-        public int MembershipId { get; set; }
         public int EmployeeId { get; set; }
         public int GroupId { get; set; }
         public DateTime AssignDate { get; set; }
