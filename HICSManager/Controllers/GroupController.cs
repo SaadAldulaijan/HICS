@@ -37,9 +37,6 @@ namespace HICSManager.Controllers
                 return NotFound();
             }
 
-            //var group = await _context.Group
-            //    .FirstOrDefaultAsync(m => m.GroupId == id);
-
             var group = _group.Entity.GetById(id);
 
 
