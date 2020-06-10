@@ -9,9 +9,8 @@ namespace HICSManager.ViewModel
     public class GroupEmpVM
     {
         public List<Employee> Members { get; set; } = new List<Employee>();
-        public List<Employee> NotMembers { get; set; }
+        public List<Employee> NotMembers { get; set; } = new List<Employee>();
         public Group Group { get; set; }
-
-
+        public bool IsChecked { get; set; }
     }
 }

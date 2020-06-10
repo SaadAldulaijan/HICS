@@ -40,55 +40,63 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
-
-            @*Modal header*@
-            <div class="modal-header">
-                Add members to @Html.DisplayFor(model => model.Group.Name)
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            @*Modal Body*@
-            <div class="modal-body">
-                <div class="input-group mb-3">
-                    @*Get list of employee who are not a member of this group*@
-
-                    <table class="table table-hover" id="dataTable">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>Email</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.NotMembers)
-                            {
-                                <tr>
-                                    <td><input type="checkbox" value="@item.ID" name="@item.ID" /></td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ID)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FirstName)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Email)
-                                    </td>
-
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
             <form asp-action="AddMember" method="post">
+
+                @*Modal header*@
+                <div class="modal-header">
+                    Add members to @Html.DisplayFor(model => model.Group.Name)
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                @*Modal Body*@
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        @*Get list of employee who are not a member of this group*@
+
+                        <table class="table table-hover" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.NotMembers)
+                                {
+                                    <tr>
+                                        <td>
+                                            @*<input type="checkbox" value="@item.ID" name="@item.ID" />*@
+                                            @Html.CheckBoxFor(modelItem => modelItem.IsChecked)
+
+                                            <input type="hidden" name="employeeIds" value="@item.ID" />
+
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.FirstName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Email)
+                                        </td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 @*Modal Footer*@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
+                    <input type="hidden" name="groupId" value="@Model.Group.GroupId" />
                     <input type="submit" class="btn btn-primary form-control" value="Submit" />
                 </div>
             </form>

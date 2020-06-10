@@ -86,23 +86,24 @@ namespace HICSManager.Controllers
         [HttpPost]
         public IActionResult AddMember(int[] employeeIds, int groupId)
         {
+
             //Validation
             if (employeeIds.Count() == 0 || groupId == 0)
             {
                 return BadRequest();
             }
-
             // get selected employeeIds from the table
-
 
             // add selected employees as a member of the group.
             // Insert into Membership table employeeId, groupId
+
             foreach (var employeeId in employeeIds)
             {
                 _membership.Entity.Insert(new Membership()
                 {
                     EmployeeId = employeeId,
-                    GroupId = groupId
+                    GroupId = groupId,
+                    AssignDate = DateTime.Now
                 });
             }
 
