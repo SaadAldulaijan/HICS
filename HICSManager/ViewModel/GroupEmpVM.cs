@@ -11,7 +11,6 @@ namespace HICSManager.ViewModel
         public List<Employee> Members { get; set; } = new List<Employee>();
         public List<Employee> NotMembers { get; set; }
         public Group Group { get; set; }
-        public bool IsChecked { get; set; }
 
 
     }

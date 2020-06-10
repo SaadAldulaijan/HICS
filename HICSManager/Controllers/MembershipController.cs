@@ -31,21 +31,18 @@ namespace HICSManager.Controllers
 
         // GET: Membership
         // id = GroupId received from Group controller, go to Views => Index => last line add members hyperlink
+        // Done
         public ActionResult Index(int id)
         {
             if (id == 0)
             {
+                // this is for development only
                 id = 1;
+                //return NotFound();
             }
             var selectedGroup = _group.Entity.GetById(id);
-
-            var members = from m in _membership.Entity.GetAll()
-                          join e in _employee.Entity.GetAll() on m.EmployeeId equals e.ID
-                          join g in _group.Entity.GetAll() on m.GroupId equals g.GroupId
-                          where g.GroupId == selectedGroup.GroupId
-                          select e;
-
-            var notMembers = GetEmployeeNotInGroup(id);
+            var members = GetMembers(id);
+            var notMembers = GetEmployeesNotInGroup(id);
 
             GroupEmpVM vm = new GroupEmpVM()
             {
@@ -57,7 +54,18 @@ namespace HICSManager.Controllers
             return View(vm);
         }
 
-        public List<Employee> GetEmployeeNotInGroup(int groupId)
+        #region Helper Methods
+        public List<Employee> GetMembers(int groupId)
+        {
+            var members = (from m in _membership.Entity.GetAll()
+                           join e in _employee.Entity.GetAll() on m.EmployeeId equals e.ID
+                           join g in _group.Entity.GetAll() on m.GroupId equals g.GroupId
+                           where g.GroupId == groupId
+                           select e).ToList();
+            return members;
+
+        }
+        public List<Employee> GetEmployeesNotInGroup(int groupId)
         {
             var userNotInGroup = (from e in _employee.Entity.GetAll()
                                   where !(from g in _membership.Entity.GetAll()
@@ -71,15 +79,32 @@ namespace HICSManager.Controllers
 
             return userNotInGroup;
         }
+        #endregion
 
+        // Reached here, i cannot pass employee to this action.
+        // Maybe i need javascript to do this task.
         [HttpPost]
-        public IActionResult AddMember(Employee employee)
+        public IActionResult AddMember(int[] employeeIds, int groupId)
         {
-            // get selected employee from the table
+            //Validation
+            if (employeeIds.Count() == 0 || groupId == 0)
+            {
+                return BadRequest();
+            }
+
+            // get selected employeeIds from the table
 
 
-            // add selected employee as a member of the group.
-            _employee.Entity.Insert(employee);
+            // add selected employees as a member of the group.
+            // Insert into Membership table employeeId, groupId
+            foreach (var employeeId in employeeIds)
+            {
+                _membership.Entity.Insert(new Membership()
+                {
+                    EmployeeId = employeeId,
+                    GroupId = groupId
+                });
+            }
 
 
             return RedirectToAction(nameof(Index));
