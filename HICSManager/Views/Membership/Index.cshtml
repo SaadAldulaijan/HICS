@@ -13,6 +13,7 @@
             <th>Id</th>
             <th>Name</th>
             <th>Email</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -28,6 +29,21 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Email)
                 </td>
+                <td>
+                    <form asp-action="DeleteMembers" method="post">
+                        <span id="confirmDeleteSpan_@item.ID" style="display:none">
+                            <span>Are you sure you want to Remove @item.FirstName from @Model.Group.Name?</span>
+                            <button type="submit" class="btn btn-danger">Yes</button>
+                            <a href="#" class="btn btn-primary" onclick="confirmDelete('@item.ID', false)">No</a>
+                        </span>
+                        <span id="deleteSpan_@item.ID">
+                            <input type="hidden" value="@item.ID" id="employeeId" name="employeeId" />
+                            <input type="hidden" value="@Model.Group.GroupId" id="groupId" name="groupId"/>
+                            <a href="#" class="btn btn-danger" onclick="confirmDelete('@item.ID', true)">Remove</a>
+                        </span>
+                    </form>
+                    @*<button class="btn btn-success" data-toggle="modal" data-target="#item-delete">Remove Member</button>*@
+                </td>
             </tr>
         }
 
@@ -35,12 +51,13 @@
 </table>
 
 
+@*Pop-up page to Add Members*@
 
 <div class="modal fade" id="item-Id" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
-            <form asp-action="AddMember" method="post">
+            <form asp-action="AddMembers" method="post">
 
                 @*Modal header*@
                 <div class="modal-header">
@@ -69,11 +86,7 @@
                                 {
                                     <tr>
                                         <td>
-                                            @*<input type="checkbox" value="@item.ID" name="@item.ID" />*@
-                                            @Html.CheckBoxFor(modelItem => modelItem.IsChecked)
-
-                                            <input type="hidden" name="employeeIds" value="@item.ID" />
-
+                                            <input type="checkbox" name="employeeIds" id="employeeIds" value="@item.ID" />
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.ID)
@@ -85,7 +98,6 @@
                                             @Html.DisplayFor(modelItem => item.Email)
                                         </td>
                                     </tr>
-
                                 }
                             </tbody>
                         </table>
@@ -95,7 +107,6 @@
                 @*Modal Footer*@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-
                     <input type="hidden" name="groupId" value="@Model.Group.GroupId" />
                     <input type="submit" class="btn btn-primary form-control" value="Submit" />
                 </div>
@@ -104,23 +115,40 @@
     </div>
 </div>
 
+
+@*Pop-up to Remove Member
+    <div class="modal fade" id="item-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Warning !</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to remove .... from .....
+                </div>
+                <div class="modal-footer">
+                    <form asp-action="DeleteMembers" method="post">
+
+                        <button type="submit" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Remove</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+*@
+
+@*Need to add JQuery script source*@
 <script type="text/javascript">
-    @*make an ajax call to the controller*@
-    function GetSelected() {
-        var grid = document.getElementById("dataTable");
-
-        var checkBoxes = grid.getElementsByTagName("input");
-
-        for (var i = 0; i < checkBoxes.length; i++) {
-            if (checkBoxes[i].checked) {
-                var row = null
-            }
-        }
-    }
-
-    function SaveList() {
-        var checkbox = document.getElementsByTagName("td");
-
-        var arr = checkbox.length;
-    }
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
 </script>
+
+@section Scripts{ 
+
+    <script src="~/js/site.js"></script>
+}

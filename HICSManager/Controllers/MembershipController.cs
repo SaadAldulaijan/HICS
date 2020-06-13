@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HICSManager.Controllers
 {
+    // please document this controller so you cannot forget. 
     public class MembershipController : Controller
     {
         #region Properties and Constructor
@@ -36,9 +37,7 @@ namespace HICSManager.Controllers
         {
             if (id == 0)
             {
-                // this is for development only
-                id = 1;
-                //return NotFound();
+                return NotFound();
             }
             var selectedGroup = _group.Entity.GetById(id);
             var members = GetMembers(id);
@@ -53,6 +52,59 @@ namespace HICSManager.Controllers
 
             return View(vm);
         }
+
+        // Reached here, i cannot pass employee to this action.
+        // Maybe i need javascript to do this task.
+        // Done without Javascript
+        // try using linq instead of foreach and if. 
+
+        [HttpPost]
+        public IActionResult AddMembers(IEnumerable<int> employeeIds, int groupId)
+        {
+            //Validation
+            if (employeeIds.Count() != 0 && groupId != 0)
+            {
+                // get selected employeeIds from the table
+                // add selected employees as a member of the group.
+                // Insert into Membership table employeeId, groupId
+
+                foreach (var employeeId in employeeIds)
+                {
+                    _membership.Entity.Insert(new Membership()
+                    {
+                        EmployeeId = employeeId,
+                        GroupId = groupId,
+                        AssignDate = DateTime.Now
+                    });
+                    _membership.Save();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+            return RedirectToAction("Index", new { id = groupId });
+        }
+        // this is not tested. 
+        // please review.
+        [HttpPost]
+        public IActionResult DeleteMembers(int employeeId, int groupId)
+        {
+            if (employeeId != 0 && groupId != 0)
+            {
+                _membership.Entity.DeleteComposite(employeeId, groupId);
+                _membership.Save();
+            }
+            else
+            {
+                return BadRequest();
+            }
+            return RedirectToAction("Index", new { id = groupId });
+        }
+
+
+
+
 
         #region Helper Methods
         public List<Employee> GetMembers(int groupId)
@@ -81,109 +133,5 @@ namespace HICSManager.Controllers
         }
         #endregion
 
-        // Reached here, i cannot pass employee to this action.
-        // Maybe i need javascript to do this task.
-        [HttpPost]
-        public IActionResult AddMember(int[] employeeIds, int groupId)
-        {
-
-            //Validation
-            if (employeeIds.Count() == 0 || groupId == 0)
-            {
-                return BadRequest();
-            }
-            // get selected employeeIds from the table
-
-            // add selected employees as a member of the group.
-            // Insert into Membership table employeeId, groupId
-
-            foreach (var employeeId in employeeIds)
-            {
-                _membership.Entity.Insert(new Membership()
-                {
-                    EmployeeId = employeeId,
-                    GroupId = groupId,
-                    AssignDate = DateTime.Now
-                });
-            }
-
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        // GET: Membership/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Membership/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Membership/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Membership/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Membership/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Membership/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Membership/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }

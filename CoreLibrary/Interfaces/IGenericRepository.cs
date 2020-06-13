@@ -11,5 +11,6 @@ namespace CoreLibrary.Interfaces
         void Insert(T entity);
         void Update(T entity);
         void Delete(int id);
+        void DeleteComposite(int firstId, int secondId);
     }
 }

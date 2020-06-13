@@ -11,14 +11,22 @@ namespace InfrastructureLibrary.Repository
     {
         private readonly DataContext _context;
         private DbSet<T> table = null;
+
         public GenericRepository(DataContext context)
         {
             _context = context;
             table = _context.Set<T>();
         }
+
         public void Delete(int id)
         {
             T existing = GetById(id);
+            table.Remove(existing);
+        }
+
+        public void DeleteComposite(int firstId, int secondId)
+        {
+            T existing = table.Find(firstId,secondId);
             table.Remove(existing);
         }
 
