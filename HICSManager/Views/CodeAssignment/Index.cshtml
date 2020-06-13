@@ -1,67 +1,69 @@
-﻿@model HICSManager.ViewModel.GroupEmpVM
+﻿@model HICSManager.ViewModel.CodeGroupVM
+
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>@Html.DisplayFor(modelItem => Model.Group.Name)</h2>
+<h2>@Html.DisplayFor(modelItem => modelItem.Code.CodeName)</h2>
 
-<button class="btn btn-success" id="btnAddMember" data-toggle="modal" data-target="#item-Id">Add Members</button>
+<button class="btn btn-success" id="btnAssignGroup" data-toggle="modal" data-target="#item-Id">Assign Group</button>
 
 <table class="table table-hover">
     <thead>
         <tr>
             <th>Id</th>
             <th>Name</th>
-            <th>Email</th>
+            <th>Type</th>
+            <th>Description</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Members)
+        @foreach (var item in Model.AssignedGroups)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ID)
+                    @Html.DisplayFor(modelItem => item.GroupId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
+                    @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Email)
+                    @Html.DisplayFor(modelItem => item.Type)
                 </td>
                 <td>
-                    <form asp-action="RemoveMember" method="post">
-                        <span id="confirmDeleteSpan_@item.ID" style="display:none">
-                            <span>Are you sure you want to Remove @item.FirstName from @Model.Group.Name?</span>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <form asp-action="UnassignGroup" method="post">
+                        <span id="confirmDeleteSpan_@item.GroupId" style="display:none">
+                            <span>Are you sure you want to Remove @item.Name from @Model.Code.CodeName?</span>
                             <button type="submit" class="btn btn-danger">Yes</button>
-                            <a href="#" class="btn btn-primary" onclick="confirmDelete('@item.ID', false)">No</a>
+                            <a href="#" class="btn btn-primary" onclick="confirmDelete('@item.GroupId', false)">No</a>
                         </span>
-                        <span id="deleteSpan_@item.ID">
-                            <input type="hidden" value="@item.ID" id="employeeId" name="employeeId" />
-                            <input type="hidden" value="@Model.Group.GroupId" id="groupId" name="groupId"/>
-                            <a href="#" class="btn btn-danger" onclick="confirmDelete('@item.ID', true)">Remove</a>
+                        <span id="deleteSpan_@item.GroupId">
+                            <input type="hidden" value="@item.GroupId" id="groupId" name="groupId" />
+                            <input type="hidden" value="@Model.Code.CodeId" id="codeId" name="codeId" />
+                            <a href="#" class="btn btn-danger" onclick="confirmDelete('@item.GroupId', true)">Remove</a>
                         </span>
                     </form>
-                    @*<button class="btn btn-success" data-toggle="modal" data-target="#item-delete">Remove Member</button>*@
                 </td>
             </tr>
         }
-
     </tbody>
 </table>
 
-
-@*Pop-up page to Add Members*@
+@*Pop-up to Assign Groups*@
 
 <div class="modal fade" id="item-Id" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
-            <form asp-action="AddMembers" method="post">
+            <form asp-action="AssignGroups" method="post">
 
                 @*Modal header*@
                 <div class="modal-header">
-                    Add members to @Html.DisplayFor(model => model.Group.Name)
+                    Assign Group to @Html.DisplayFor(model => model.Code.CodeName)
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -70,7 +72,7 @@
                 @*Modal Body*@
                 <div class="modal-body">
                     <div class="input-group mb-3">
-                        @*Get list of employee who are not a member of this group*@
+                        @*Get list of Group who are not assigned to this code*@
 
                         <table class="table table-hover" id="dataTable">
                             <thead>
@@ -78,24 +80,28 @@
                                     <th>#</th>
                                     <th>Id</th>
                                     <th>Name</th>
-                                    <th>Email</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.NotMembers)
+                                @foreach (var item in Model.UnassignedGroups)
                                 {
                                     <tr>
                                         <td>
-                                            <input type="checkbox" name="employeeIds" id="employeeIds" value="@item.ID" />
+                                            <input type="checkbox" name="groupIds" id="groupIds" value="@item.GroupId" />
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.ID)
+                                            @Html.DisplayFor(modelItem => item.GroupId)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.FirstName)
+                                            @Html.DisplayFor(modelItem => item.Name)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Email)
+                                            @Html.DisplayFor(modelItem => item.Type)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Description)
                                         </td>
                                     </tr>
                                 }
@@ -107,7 +113,7 @@
                 @*Modal Footer*@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <input type="hidden" name="groupId" value="@Model.Group.GroupId" />
+                    <input type="hidden" name="codeId" value="@Model.Code.CodeId" />
                     <input type="submit" class="btn btn-primary form-control" value="Submit" />
                 </div>
             </form>
@@ -116,15 +122,3 @@
 </div>
 
 
-
-@*Need to add JQuery script source*@
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#dataTable').DataTable();
-    });
-</script>
-
-@section Scripts{ 
-
-    <script src="~/js/site.js"></script>
-}

@@ -53,6 +53,7 @@ namespace HICSManager.Controllers
             return View(vm);
         }
 
+
         // Reached here, i cannot pass employee to this action.
         // Maybe i need javascript to do this task.
         // Done without Javascript
@@ -85,10 +86,13 @@ namespace HICSManager.Controllers
             }
             return RedirectToAction("Index", new { id = groupId });
         }
-        // this is not tested. 
-        // please review.
+
+
+        // add method in repo to delete composite keys. DONE
+        // JS to confirm delete. DONE
+        // Working Fine. 
         [HttpPost]
-        public IActionResult DeleteMembers(int employeeId, int groupId)
+        public IActionResult RemoveMember(int employeeId, int groupId)
         {
             if (employeeId != 0 && groupId != 0)
             {
@@ -101,10 +105,6 @@ namespace HICSManager.Controllers
             }
             return RedirectToAction("Index", new { id = groupId });
         }
-
-
-
-
 
         #region Helper Methods
         public List<Employee> GetMembers(int groupId)

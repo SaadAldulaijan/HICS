@@ -42,7 +42,8 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.CodeId">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.CodeId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.CodeId">Delete</a>
+                    <a asp-action="Delete" asp-route-id="@item.CodeId">Delete</a> |
+                    <a asp-action="Index" asp-controller="CodeAssignment" asp-route-id="@item.CodeId">Assign To Group</a>
                 </td>
             </tr>
     }
