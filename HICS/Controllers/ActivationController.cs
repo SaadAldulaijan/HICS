@@ -17,6 +17,7 @@ namespace HICS.Controllers
          * We should know who inserted this record. : DONE.
          * We should know when the record is inserted : DONE.
          * We should play a sound : DONE.
+         * We should send record to Dashboard.
          * We should send pager.
          * We should send notification.
          */
@@ -58,7 +59,8 @@ namespace HICS.Controllers
                     Status = true,
                     ActivationTime = DateTime.Now
                 };
-                ////This is working !
+
+                //Sound is working !
                 string codeName = _code.Entity.GetById(activation.CodeId).CodeName;
                 string locationName = _location.Entity.GetById(activation.LocationId).LocationName;
                 PlaySound(codeName, locationName);
@@ -72,6 +74,8 @@ namespace HICS.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        
         #region Helper Methods
         public bool IsValidBadgeNo(int BadgeNo)
         {
