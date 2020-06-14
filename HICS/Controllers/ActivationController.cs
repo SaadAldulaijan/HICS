@@ -64,7 +64,7 @@ namespace HICS.Controllers
                 PlaySound(codeName, locationName);
 
                 _activation.Entity.Insert(activation);
-                //_activation.Save();
+                _activation.Save();
             }
             else
             {
