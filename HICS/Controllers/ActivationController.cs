@@ -22,6 +22,8 @@ namespace HICS.Controllers
          * We should send notification.
          */
 
+        #region Properties and Constructor
+
         private readonly IUnitOfWork<Activation> _activation;
         private readonly IUnitOfWork<Code> _code;
         private readonly IUnitOfWork<Location> _location;
@@ -37,18 +39,22 @@ namespace HICS.Controllers
             _location = location;
             _employee = employee;
         }
+        #endregion
+
+
         public IActionResult Index()
         {
-
             ActivationVM activationVM = new ActivationVM()
             {
                 Codes = _code.Entity.GetAll().ToList()
             };
             return View(activationVM);
         }
+        // needs refactor
         [HttpPost]
         public IActionResult Activate(ActivationVM activationVM)
         {
+            // check if badge is correct.
             if (IsValidBadgeNo(activationVM.Employee.ID))
             {
                 Activation activation = new Activation()
@@ -56,6 +62,7 @@ namespace HICS.Controllers
                     CodeId = activationVM.Code.CodeId,
                     LocationId = Int32.Parse(Request.Cookies["LocationId"]), //Cookie Expiry should be considered
                     EmployeeId = activationVM.Employee.ID,
+                    //status means code is activated or cleared
                     Status = true,
                     ActivationTime = DateTime.Now
                 };

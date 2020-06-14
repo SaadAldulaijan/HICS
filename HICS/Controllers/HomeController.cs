@@ -11,8 +11,10 @@ using CoreLibrary.Entities;
 
 namespace HICS.Controllers
 {
+    //this controller is for testing only
     public class HomeController : Controller
     {
+        
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitOfWork<Activation> _activation;
         private readonly IUnitOfWork<Employee> _employee;
