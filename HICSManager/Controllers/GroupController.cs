@@ -2,21 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HICS.Library.Models;
+using HICS.Library.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CoreLibrary.Entities;
-using InfrastructureLibrary;
-using CoreLibrary.Interfaces;
 
 namespace HICSManager.Controllers
 {
     public class GroupController : Controller
     {
         #region Properties and Constructor
-        private readonly IUnitOfWork<Group> _group;
-
-        public GroupController(IUnitOfWork<Group> group)
+        private readonly IGroupService _group;
+        public GroupController(IGroupService group)
         {
             _group = group;
         }
@@ -24,20 +22,21 @@ namespace HICSManager.Controllers
 
         #region Select
         // GET: Groups
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_group.Entity.GetAll());
+            var data = await _group.Get();
+            return View(data);
         }
 
         // GET: Groups/Details/5
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == 0)
             {
                 return NotFound();
             }
 
-            var group = _group.Entity.GetById(id);
+            var group =await  _group.GetById(id);
 
 
             if (group == null)
@@ -59,12 +58,11 @@ namespace HICSManager.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("GroupId,Name,Type,Description")] Group group)
+        public async Task<IActionResult> Create(Group group)
         {
             if (ModelState.IsValid)
             {
-                _group.Entity.Insert(group);
-                _group.Save();
+                await _group.Post(group);
                 return RedirectToAction(nameof(Index));
             }
             return View(group);
@@ -73,14 +71,14 @@ namespace HICSManager.Controllers
 
         #region Update
         // GET: Groups/Edit/5
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == 0)
             {
                 return NotFound();
             }
 
-            var group = _group.Entity.GetById(id);
+            var group = await _group.GetById(id);
             if (group == null)
             {
                 return NotFound();
@@ -91,7 +89,7 @@ namespace HICSManager.Controllers
         // POST: Group/Edit/group
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("GroupId,Name,Type,Description")] Group group)
+        public async Task<IActionResult> Edit(int id, Group group)
         {
             if (id != group.GroupId)
             {
@@ -102,8 +100,7 @@ namespace HICSManager.Controllers
             {
                 try
                 {
-                    _group.Entity.Update(group);
-                    _group.Save();
+                    await _group.Update(id,group);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -125,13 +122,13 @@ namespace HICSManager.Controllers
         #region Delete
 
         // GET: Groups/Delete/5
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == 0)
             {
                 return NotFound();
             }
-            var group = _group.Entity.GetById(id);
+            var group = await _group.GetById(id);
             if (group == null)
             {
                 return NotFound();
@@ -143,17 +140,23 @@ namespace HICSManager.Controllers
         // POST: Groups/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var group = _group.Entity.GetById(id);
-            _group.Entity.Delete(group.GroupId);
-            _group.Save();
+            var group = await _group.GetById(id);
+            await _group.Delete(group.GroupId);
             return RedirectToAction(nameof(Index));
         }
 
         private bool GroupExists(int id)
         {
-            return _group.Entity.GetAll().Any(e => e.GroupId == id);
+
+            List<Group> groups = new List<Group>();
+            Task.Run(async () =>
+            {
+                groups = await _group.Get();
+            });
+
+            return groups.Any(e => e.GroupId == id);
         }
         #endregion
     }

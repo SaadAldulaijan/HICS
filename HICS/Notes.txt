@@ -1,0 +1,10 @@
+﻿
+this application should be refactored to be SPA.
+
+Using blazor ==> Progressive Web application can do the job.
+
+- Dashboard also is going to be SPA with SignalR
+
+This application has 0 dependency on Backend.
+
+this application is fully dependent on API.

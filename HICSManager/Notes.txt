@@ -1,0 +1,4 @@
+﻿this application should be 0 dependent on backend 
+this application should be fully dependent on API only
+
+use blazor if possible to utilize DevExpress.

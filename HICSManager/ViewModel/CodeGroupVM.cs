@@ -1,4 +1,4 @@
-﻿using CoreLibrary.Entities;
+﻿using HICS.Library.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

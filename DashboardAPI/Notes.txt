@@ -1,0 +1,7 @@
+﻿this api is the main channel between backend and front end. 
+
+all front end is fully dependent on this api: 
+1. HICS.
+2. HICS Manager.
+3. HICS Dashboard.
+4. HICS Mobile.

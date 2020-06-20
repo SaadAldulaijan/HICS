@@ -1,0 +1,6 @@
+﻿this library will be used by all fornt end applications
+
+HICS ==> Blazor
+HICS Manager ==> MVC Core
+HICS Mobile ==> Xamarin.Forms
+HICS Dashboard ==> Blazor

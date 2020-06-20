@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HICS.Library.Models
+{
+    public class Activation
+    {
+        public int ActivationId { get; set; }
+        public int CodeId { get; set; }
+        public int LocationId { get; set; }
+        public int EmployeeId { get; set; }
+        public DateTime ActivationTime { get; set; }
+        public bool Status { get; set; }
+    }
+}

@@ -4,9 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
-using CoreLibrary.Entities;
-using CoreLibrary.Interfaces;
-using HICS.ViewModels;
+using HICS.Library.Models;
+using HICS.Library.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,31 +14,31 @@ namespace HICS.Controllers
 {
     public class LocationController : Controller
     {
-        private readonly IUnitOfWork<Location> _locaion;
-        private readonly IUnitOfWork<Device> _device;
-
-        public LocationController(IUnitOfWork<Location> locaion , IUnitOfWork<Device> device)
+        #region Properties and Constructor
+        private readonly ILocationService _location;
+        //private readonly IDeviceService _device;
+        public LocationController(ILocationService location /*,IDeviceService device */)
         {
-            _locaion = locaion;
-            _device = device;
+            _location = location;
+            //_device = device;
         }
-        public IActionResult Index()
+        #endregion
+
+        public async Task<IActionResult> Index()
         {
-            ViewData["LocationId"] = new SelectList(_locaion.Entity.GetAll(), "LocationId", "LocationName");
+            var data = await _location.Get();
+            ViewData["LocationId"] = new SelectList(data, "LocationId", "LocationName");
             return View();
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(Location location , Device device)
+        public async Task<IActionResult> Index(Location location, Device device)
         {
-            //should save in cookies. 
-            //should be passed to activation form.
-
             if (ModelState.IsValid)
             {
                 //Save Cookies.
-                var selectedItem = _locaion.Entity.GetById(location.LocationId);
+                var selectedItem = await _location.GetById(location.LocationId);
                 CookieOptions cookieOptions = new CookieOptions();
                 cookieOptions.Expires = DateTime.Now.AddHours(2);
                 Response.Cookies.Append("LocationId", selectedItem.LocationId.ToString(), cookieOptions);
@@ -48,28 +47,24 @@ namespace HICS.Controllers
                 string macAddress = "test"; //GetMACAddress();
                 string hostName = Dns.GetHostName();
                 string ipAddress = GetIP();
-
                 device = new Device
                 {
                     MACAddress = macAddress,
                     HostName = hostName,
                     IPAddress = ipAddress
                 };
-                _device.Entity.Insert(device);
-                //_device.Save();
-                //Redirect to activation page
+
+                // await _device.Post(device);
                 return RedirectToAction("Index", "Activation");
             }
-
             ViewData["LocationId"] = new SelectList(
-                _locaion.Entity.GetAll(), 
-                "LocationId", 
-                "LocationName", 
+                await _location.Get(),
+                "LocationId",
+                "LocationName",
                 location.LocationId);
 
             return BadRequest();
         }
-
 
         #region Helper Methods 
 

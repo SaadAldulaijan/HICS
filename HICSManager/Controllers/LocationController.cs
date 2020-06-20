@@ -4,18 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using HICS.Library.Services;
+using HICS.Library.Models;
 using Microsoft.EntityFrameworkCore;
-using CoreLibrary.Entities;
-using InfrastructureLibrary;
-using CoreLibrary.Interfaces;
 
 namespace HICSManager.Controllers
 {
+    // Dependent on API : Done
     public class LocationController : Controller
     {
         #region Properties and Constructor
-        private readonly IUnitOfWork<Location> _location;
-        public LocationController(IUnitOfWork<Location> location)
+        private readonly ILocationService _location;
+        public LocationController(ILocationService location)
         {
             _location = location;
         }
@@ -23,20 +23,21 @@ namespace HICSManager.Controllers
 
         #region Select
         // GET: Location
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_location.Entity.GetAll());
+            var data = await _location.Get();
+            return View(data);
         }
 
         // GET: Location/Details/5
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == 0)
             {
                 return NotFound();
             }
 
-            var location = _location.Entity.GetById(id);
+            var location = await _location.GetById(id);
             if (location == null)
             {
                 return NotFound();
@@ -55,12 +56,11 @@ namespace HICSManager.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("LocationId,LocationName,AreaCode")] Location location)
+        public async Task<IActionResult> Create(Location location)
         {
             if (ModelState.IsValid)
             {
-                _location.Entity.Insert(location);
-                _location.Save();
+                await _location.Post(location);
                 return RedirectToAction(nameof(Index));
             }
             return View(location);
@@ -69,14 +69,14 @@ namespace HICSManager.Controllers
 
         #region Update
         // GET: Location/Edit/5
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == 0)
             {
                 return NotFound();
             }
 
-            var location = _location.Entity.GetById(id);
+            var location = await _location.GetById(id);
             if (location == null)
             {
                 return NotFound();
@@ -87,7 +87,7 @@ namespace HICSManager.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("LocationId,LocationName,AreaCode")] Location location)
+        public async Task<IActionResult> Edit(int id, Location location)
         {
             if (id != location.LocationId)
             {
@@ -98,8 +98,7 @@ namespace HICSManager.Controllers
             {
                 try
                 {
-                    _location.Entity.Update(location);
-                    _location.Save();
+                    await _location.Update(id, location);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -120,15 +119,13 @@ namespace HICSManager.Controllers
 
         #region Delete
         // GET: Location/Delete/5
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == 0)
             {
                 return NotFound();
             }
-
-
-            var location = _location.Entity.GetById(id);
+            var location = await _location.GetById(id);
             if (location == null)
             {
                 return NotFound();
@@ -140,17 +137,22 @@ namespace HICSManager.Controllers
         // POST: Location/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var location = _location.Entity.GetById(id);
-            _location.Entity.Delete(id);
-            _location.Save();
+            var location = await _location.GetById(id);
+            await _location.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool LocationExists(int id)
         {
-            return _location.Entity.GetAll().Any(e => e.LocationId == id);
+            List<Location> location = new List<Location>();
+            Task.Run(async () =>
+            {
+                location = await _location.Get();
+            });
+            
+            return location.Any(e => e.LocationId == id);
         }
         #endregion
     }

@@ -2,21 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HICS.Library.Models;
+using HICS.Library.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CoreLibrary.Entities;
-using InfrastructureLibrary;
-using CoreLibrary.Interfaces;
 
 namespace HICSManager.Controllers
 {
     public class EmployeeController : Controller
     {
         #region Properties and Constructor
-        private readonly IUnitOfWork<Employee> _employee;
+        private readonly IEmployeeService _employee;
 
-        public EmployeeController(IUnitOfWork<Employee> employee)
+        public EmployeeController(IEmployeeService employee)
         {
             _employee = employee;
         }
@@ -25,15 +24,16 @@ namespace HICSManager.Controllers
 
         #region Select
         // GET: Employee
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_employee.Entity.GetAll());
+            var data = await _employee.Get();
+            return View(data);
         }
 
         // GET: Employee/Details/5
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var employee = _employee.Entity.GetById(id);
+            var employee = await _employee.GetById(id);
             if (employee == null)
             {
                 return NotFound();
@@ -53,12 +53,11 @@ namespace HICSManager.Controllers
         // POST: Employee/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("ID,FirstName,LastName,MoblieNo,Email")] Employee employee)
+        public async Task<IActionResult> Create(Employee employee)
         {
             if (ModelState.IsValid)
             {
-                _employee.Entity.Insert(employee);
-                _employee.Save();
+                await _employee.Post(employee);
                 return RedirectToAction(nameof(Index));
             }
             return View(employee);
@@ -67,9 +66,9 @@ namespace HICSManager.Controllers
 
         #region Update
         // GET: Employee/Edit/5
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var employee = _employee.Entity.GetById(id);
+            var employee = await _employee.GetById(id);
             if (employee == null)
             {
                 return NotFound();
@@ -80,7 +79,7 @@ namespace HICSManager.Controllers
         // POST: Employee/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("ID,FirstName,LastName,MoblieNo,Email")] Employee employee)
+        public async Task<IActionResult> Edit(int id, Employee employee)
         {
             if (id != employee.ID)
             {
@@ -91,8 +90,7 @@ namespace HICSManager.Controllers
             {
                 try
                 {
-                    _employee.Entity.Update(employee);
-                    _employee.Save();
+                    await _employee.Update(id, employee);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -113,9 +111,9 @@ namespace HICSManager.Controllers
 
         #region Delete
         // GET: Employee/Delete/5
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var employee = _employee.Entity.GetById(id);
+            var employee = await _employee.GetById(id);
             if (employee == null)
             {
                 return NotFound();
@@ -127,17 +125,21 @@ namespace HICSManager.Controllers
         // POST: Employee/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = _employee.Entity.GetById(id);
-            _employee.Entity.Delete(employee.ID);
-            _employee.Save();
+            var employee = await _employee.GetById(id);
+            await _employee.Delete(employee.ID);
             return RedirectToAction(nameof(Index));
         }
 
         private bool EmployeeExists(int id)
         {
-            return _employee.Entity.GetAll().Any(e => e.ID == id);
+            List<Employee> employees = new List<Employee>();
+            Task.Run(async () =>
+            {
+                employees = await _employee.Get();
+            });
+            return employees.Any(e => e.ID == id);
         }
 
         #endregion

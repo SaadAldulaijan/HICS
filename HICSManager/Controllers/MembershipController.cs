@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CoreLibrary.Entities;
-using CoreLibrary.Interfaces;
+using HICS.Library.Models;
+using HICS.Library.Services;
 using HICSManager.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,39 +14,38 @@ namespace HICSManager.Controllers
     public class MembershipController : Controller
     {
         #region Properties and Constructor
-        private readonly IUnitOfWork<Membership> _membership;
-        private readonly IUnitOfWork<Employee> _employee;
-        private readonly IUnitOfWork<Group> _group;
-
-        public MembershipController(IUnitOfWork<Membership> membership,
-                                    IUnitOfWork<Employee> employee,
-                                    IUnitOfWork<Group> group)
+        private readonly IMembershipService _membership;
+        private readonly IEmployeeService _employee;
+        private readonly IGroupService _group;
+        
+        public MembershipController(IMembershipService membership,
+                                    IEmployeeService employee,
+                                    IGroupService group)
         {
             _membership = membership;
             _employee = employee;
             _group = group;
         }
-
         #endregion
 
 
         // GET: Membership
         // id = GroupId received from Group controller, go to Views => Index => last line add members hyperlink
         // Done
-        public ActionResult Index(int id)
+        public async Task<ActionResult> Index(int id)
         {
             if (id == 0)
             {
                 return NotFound();
             }
-            var selectedGroup = _group.Entity.GetById(id);
+            var selectedGroup = await _group.GetById(id);
             var members = GetMembers(id);
             var notMembers = GetEmployeesNotInGroup(id);
 
             GroupEmpVM vm = new GroupEmpVM()
             {
-                Members = members.ToList(),
-                NotMembers = notMembers,
+                Members = await members,
+                NotMembers = await notMembers,
                 Group = selectedGroup
             };
 
@@ -60,7 +59,7 @@ namespace HICSManager.Controllers
         // try using linq instead of foreach and if. 
 
         [HttpPost]
-        public IActionResult AddMembers(IEnumerable<int> employeeIds, int groupId)
+        public async Task<IActionResult> AddMembers(IEnumerable<int> employeeIds, int groupId)
         {
             //Validation
             if (employeeIds.Count() != 0 && groupId != 0)
@@ -71,13 +70,12 @@ namespace HICSManager.Controllers
 
                 foreach (var employeeId in employeeIds)
                 {
-                    _membership.Entity.Insert(new Membership()
+                    await _membership.Post(new Membership()
                     {
                         EmployeeId = employeeId,
                         GroupId = groupId,
                         AssignDate = DateTime.Now
                     });
-                    _membership.Save();
                 }
             }
             else
@@ -92,12 +90,11 @@ namespace HICSManager.Controllers
         // JS to confirm delete. DONE
         // Working Fine. 
         [HttpPost]
-        public IActionResult RemoveMember(int employeeId, int groupId)
+        public async Task<IActionResult> RemoveMember(int employeeId, int groupId)
         {
             if (employeeId != 0 && groupId != 0)
             {
-                _membership.Entity.DeleteComposite(employeeId, groupId);
-                _membership.Save();
+                await _membership.DeleteComposite(employeeId, groupId);
             }
             else
             {
@@ -107,20 +104,22 @@ namespace HICSManager.Controllers
         }
 
         #region Helper Methods
-        public List<Employee> GetMembers(int groupId)
+        public async Task<List<Employee>> GetMembers(int groupId)
         {
-            var members = (from m in _membership.Entity.GetAll()
-                           join e in _employee.Entity.GetAll() on m.EmployeeId equals e.ID
-                           join g in _group.Entity.GetAll() on m.GroupId equals g.GroupId
+            var members = (from m in await _membership.Get()
+                           join e in await _employee.Get() on m.EmployeeId equals e.ID
+                           join g in await _group.Get() on m.GroupId equals g.GroupId
                            where g.GroupId == groupId
                            select e).ToList();
             return members;
 
         }
-        public List<Employee> GetEmployeesNotInGroup(int groupId)
+        public async Task<List<Employee>> GetEmployeesNotInGroup(int groupId)
         {
-            var userNotInGroup = (from e in _employee.Entity.GetAll()
-                                  where !(from g in _membership.Entity.GetAll()
+            var memberships = await _membership.Get();
+
+            var userNotInGroup = (from e in await _employee.Get()
+                                  where !(from g in memberships
                                           where g.GroupId == groupId
                                           select g.EmployeeId)
                                   .Contains(e.ID)

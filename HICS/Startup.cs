@@ -2,12 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CoreLibrary.Interfaces;
-using InfrastructureLibrary;
-using InfrastructureLibrary.UnitOfWork;
+using HICS.Library.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,11 +24,11 @@ namespace HICS
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<DataContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("HICS_DB"));
-            });
-            services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
+            // My Dependency Injection
+            services.AddTransient<ILocationService, LocationService>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
+            services.AddTransient<ICodeService, CodeService>();
+            services.AddTransient<IActivationService, ActivationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

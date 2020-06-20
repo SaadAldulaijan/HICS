@@ -2,21 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HICS.Library.Models;
+using HICS.Library.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CoreLibrary.Entities;
-using InfrastructureLibrary;
-using CoreLibrary.Interfaces;
 
 namespace HICSManager.Controllers
 {
     public class CodeController : Controller
     {
         #region Properties and Constructor
-        private readonly IUnitOfWork<Code> _code;
+        private readonly ICodeService _code;
 
-        public CodeController(IUnitOfWork<Code> code)
+        public CodeController(ICodeService code)
         {
             _code = code;
         }
@@ -24,15 +23,16 @@ namespace HICSManager.Controllers
 
         #region Select
         // GET: Code
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_code.Entity.GetAll());
+            var data = await _code.Get();
+            return View(data);
         }
 
         // GET: Code/Details/5
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var code = _code.Entity.GetById(id);
+            var code = await _code.GetById(id);
             if (code == null)
             {
                 return NotFound();
@@ -52,12 +52,11 @@ namespace HICSManager.Controllers
         // POST: Code/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("CodeId,CodeName,CodeColor,PagerNo")] Code code)
+        public async Task<IActionResult> Create(Code code)
         {
             if (ModelState.IsValid)
             {
-                _code.Entity.Insert(code);
-                _code.Save();
+                await _code.Post(code);
                 return RedirectToAction(nameof(Index));
             }
             return View(code);
@@ -66,9 +65,9 @@ namespace HICSManager.Controllers
 
         #region Update
         // GET: Code/Edit/5
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var code = _code.Entity.GetById(id);
+            var code = await _code.GetById(id);
             if (code == null)
             {
                 return NotFound();
@@ -79,7 +78,7 @@ namespace HICSManager.Controllers
         // POST: Code/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("CodeId,CodeName,CodeColor,PagerNo")] Code code)
+        public async Task<IActionResult> Edit(int id, Code code)
         {
             if (id != code.CodeId)
             {
@@ -90,8 +89,7 @@ namespace HICSManager.Controllers
             {
                 try
                 {
-                    _code.Entity.Update(code);
-                    _code.Save();
+                    await _code.Update(id,code);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -112,9 +110,9 @@ namespace HICSManager.Controllers
 
         #region Delete
         // GET: Code/Delete/5
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var code = _code.Entity.GetById(id);
+            var code = await _code.GetById(id);
             if (code == null)
             {
                 return NotFound();
@@ -126,17 +124,21 @@ namespace HICSManager.Controllers
         // POST: Code/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var code = _code.Entity.GetById(id);
-            _code.Entity.Delete(code.CodeId);
-            _code.Save();
+            var code = await _code.GetById(id);
+            await _code.Delete(code.CodeId);
             return RedirectToAction(nameof(Index));
         }
 
         private bool CodeExists(int id)
         {
-            return _code.Entity.GetAll().Any(e => e.CodeId == id);
+            List<Code> codes = new List<Code>();
+            Task.Run(async () =>
+            {
+                codes = await _code.Get();
+            });
+            return codes.Any(e => e.CodeId == id);
         }
         #endregion
     }
