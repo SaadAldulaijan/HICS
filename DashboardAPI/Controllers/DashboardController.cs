@@ -44,12 +44,12 @@ namespace DashboardAPI.Controllers
             _employee = employee;
             _hub = hub;
         }
-        #endregion 
+        #endregion
 
+        #region Actions
         [HttpGet]
         public ActionResult<IEnumerable<Activation>> Index()
         {
-            //await _hub.Clients.All.SendAsync("Reports");
             return _activation.Entity.GetAll().ToList();
         }
 
@@ -77,15 +77,6 @@ namespace DashboardAPI.Controllers
             await _hub.Clients.All.SendAsync("Reports");
             return vms;
         }
-
-        //[HttpPost]
-        //[Route("/PostActivation")]
-        //public async Task<ActionResult> Post(Activation activation)
-        //{
-        //    _activation.Entity.Insert(activation);
-        //    _activation.Save();
-        //    await _hub.Clients.All.SendAsync("Reports");
-        //    return Ok("Successfully Created");
-        //}
+        #endregion
     }
 }

@@ -1,0 +1,94 @@
+﻿@page "/"
+
+<h1>HICS Dashboard</h1>
+
+@if (vm.Count() == 0)
+{
+    <p> Loading Data ...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Code</th>
+                <th>Location</th>
+                <th>Employee</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in vm)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.CodeName</td>
+                    <td>@item.LocationName</td>
+                    <td>@item.EmployeeName</td>
+                    <td>@item.DateTime</td>
+                    @if (item.Status)
+                    {
+                        <td>Activated</td>
+                    }
+                    else
+                    {
+                        <td>Cleared</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code{
+
+    List<DashboardVM> vm = new List<DashboardVM>();
+
+    private HubConnection hub;
+
+    string url = "https://localhost:44366/reportinghub";
+
+    protected override async Task OnInitializedAsync()
+    {
+        hub = new HubConnectionBuilder().WithUrl(url).Build();
+        hub.On("Reports", () =>
+        {
+            LoadData();
+            StateHasChanged();
+        });
+        await hub.StartAsync();
+        await GetData();
+    }
+
+    private void LoadData()
+    {
+        Task.Run(async () =>
+        {
+            await GetData();
+        });
+    }
+
+    private async Task GetData()
+    {
+        HttpClient client = new HttpClient();
+        client.BaseAddress = new Uri("https://localhost:44366/");
+        try
+        {
+            vm = await client.GetFromJsonAsync<List<DashboardVM>>("/AllDetails");
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+
+            throw new Exception(ex.Message);
+        }
+    }
+    public void Dispose()
+    {
+        _ = hub.DisposeAsync();
+    }
+}

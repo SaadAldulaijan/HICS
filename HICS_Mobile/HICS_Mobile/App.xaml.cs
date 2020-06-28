@@ -1,8 +1,6 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using HICS_Mobile.Services;
-using HICS_Mobile.Views;
 
 namespace HICS_Mobile
 {
@@ -13,8 +11,8 @@ namespace HICS_Mobile
         {
             InitializeComponent();
 
-            DependencyService.Register<MockDataStore>();
-            MainPage = new FirstPage();
+            //DependencyService.Register<MockDataStore>();
+            //MainPage = new MainPage();
         }
 
         protected override void OnStart()

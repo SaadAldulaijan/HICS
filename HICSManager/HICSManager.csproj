@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HICS.Library\HICS.Library.csproj" />
-    <ProjectReference Include="..\InfrastructureLibrary\InfrastructureLibrary.csproj" />
   </ItemGroup>
 
 </Project>
