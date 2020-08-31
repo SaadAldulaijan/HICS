@@ -17,6 +17,7 @@ else
                 <th>Employee</th>
                 <th>Date</th>
                 <th>Status</th>
+                <th>#</th>
             </tr>
         </thead>
         <tbody>
@@ -36,7 +37,8 @@ else
                     {
                         <td>Cleared</td>
                     }
-                </tr>
+                    <td><button type="button" @onclick="DeactivateCode" class="btn-danger">Deactivate</button></td>
+                </tr>  
             }
         </tbody>
     </table>
@@ -70,6 +72,17 @@ else
         {
             await GetData();
         });
+    }
+
+    private async Task DeactivateCode()
+    {
+        //populate Are you sure popup modal
+        //find the selected activation id
+        //send put request to api to update
+
+        HttpClient client = new HttpClient();
+        client.BaseAddress = new Uri("https://localhost:44366/");
+        
     }
 
     private async Task GetData()

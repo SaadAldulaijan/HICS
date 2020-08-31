@@ -50,5 +50,14 @@ namespace DashboardAPI.Controllers
             await _hub.Clients.All.SendAsync("Reports");
             return Ok("Successfully Created");
         }
+
+        [HttpPut]
+        public async Task<ActionResult> Put(Activation activation)
+        {
+            _activation.Entity.Update(activation);
+            _activation.Save();
+            await _hub.Clients.All.SendAsync("Reports");
+            return Ok("Successfully Updated");
+        }
     }
 }
